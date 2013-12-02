@@ -7,7 +7,7 @@ use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * 
+ *
  */
 class JSONServiceProvider implements ServiceProviderInterface
 {
@@ -27,13 +27,16 @@ class JSONServiceProvider implements ServiceProviderInterface
             }
         );
 
-        /* Error Handler magique : 
+        /* Error Handler magique :
          * catch toutes les exceptions, et fait une réponse JSON normale, en gardant le code d'erreur HTTP :)
          */
         $app->error(
             function (\Exception $e, $code) use ($app) {
                 if (!is_a($e, "Symfony\Component\HttpKernel\Exception\HttpException")) {
                     $code = $e->getCode();
+                }
+                if (is_a($e, "InvalidArgumentException")) {
+                    $code = 400;
                 }
                 if ($code >= 100 && $code < 500) {
                     return $app->json($e->getMessage(), $code);
