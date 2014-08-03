@@ -21,8 +21,8 @@
         "bin-dir": "bin"
     },
     "autoload": {
-        "psr-0": {
-            "ETNA\\Silex\\Provider\\JSON": "src"
+        "psr-4": {
+            "ETNA\\Silex\\Provider\\JSON\\": "src"
         }
     },
     "extra": {
