@@ -14,15 +14,12 @@
         "php": ">=5.5",
         "silex/silex": "1.x"
     },
-    "require-dev": {
-        "behat/behat": "2.x"
-    },
     "config": {
         "bin-dir": "bin"
     },
     "autoload": {
-        "psr-0": {
-            "ETNA\\Silex\\Provider\\JSON": "src"
+        "psr-4": {
+            "ETNA\\Silex\\Provider\\JSON\\": "src"
         }
     },
     "extra": {
