@@ -42,6 +42,7 @@ class JSONServiceProvider implements ServiceProviderInterface
             // Ca ne devrait pas arriver, mais juste au cas ou Symfony décide de nous retourner
             // une resource sur un truc un peu gros par exemple
             $this->app->abort(500, "\$request->getContent() is not a string, WTF ????");
+            return; // inutile, mais pas pour scrutinizer
         }
 
         $data = json_decode($content, true);
@@ -66,18 +67,34 @@ class JSONServiceProvider implements ServiceProviderInterface
      */
     public function errorHandler(\Exception $exception, $code)
     {
-        if (false === is_a($exception, "Symfony\Component\HttpKernel\Exception\HttpException")) {
-            $code = $exception->getCode();
-        }
+        $code = $this->sanitizeExceptionCode($code, $exception);
 
-        if (true === is_a($exception, "InvalidArgumentException")) {
-            $code = 400;
-        }
-
-        if ($code >= 100 && $code < 500) {
+        if (100 <= $code && $code < 500) {
             return $this->app->json($exception->getMessage(), $code);
         }
 
         return $this->app->json($this->app["debug"] === true ? $exception->getMessage() : null, 500);
+    }
+
+    /**
+     * @param integer $code
+     * @param \Exception $exception
+     * @return integer
+     */
+    private function sanitizeExceptionCode($code, \Exception $exception = null)
+    {
+        switch (true) {
+            case false === is_a($exception, "Symfony\Component\HttpKernel\Exception\HttpException"):
+                return $this->sanitizeExceptionCode($exception->getCode());
+
+            case true === is_a($exception, "InvalidArgumentException"):
+                return 400;
+
+            case 100 <= $code && $code < 600:
+                return $code;
+
+            default:
+                return 500;
+        }
     }
 }
