@@ -69,11 +69,18 @@ class JSONServiceProvider implements ServiceProviderInterface
     {
         $code = $this->sanitizeExceptionCode($code, $exception);
 
-        if (100 <= $code && $code < 500) {
-            return $this->app->json($exception->getMessage(), $code);
+        switch (true) {
+            case 100 <= $code && $code < 500:
+            case $this->app["debug"] === true:
+                $message = $exception->getMessage();
+                break;
+
+            default:
+                $message = null;
+                break;
         }
 
-        return $this->app->json($this->app["debug"] === true ? $exception->getMessage() : null, 500);
+        return $this->app->json($message, $code);
     }
 
     /**
@@ -81,11 +88,11 @@ class JSONServiceProvider implements ServiceProviderInterface
      * @param \Exception $exception
      * @return integer
      */
-    private function sanitizeExceptionCode($code, \Exception $exception = null)
+    private function sanitizeExceptionCode($code, \Exception $exception)
     {
         switch (true) {
             case false === is_a($exception, "Symfony\Component\HttpKernel\Exception\HttpException"):
-                return $this->sanitizeExceptionCode($exception->getCode());
+                return $this->sanitizeExceptionCode($exception->getCode(), $exception);
 
             case true === is_a($exception, "InvalidArgumentException"):
                 return 400;
