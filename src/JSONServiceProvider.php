@@ -38,7 +38,7 @@ class JSONServiceProvider implements ServiceProviderInterface
         }
 
         $content = $request->getContent();
-        if (false === is_string($content)) {
+        if (true === is_resource($content)) {
             // Ca ne devrait pas arriver, mais juste au cas ou Symfony décide de nous retourner
             // une resource sur un truc un peu gros par exemple
             $this->app->abort(500, "\$request->getContent() is not a string, WTF ????");
