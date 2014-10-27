@@ -37,21 +37,13 @@ class JSONServiceProvider implements ServiceProviderInterface
             return;
         }
 
-        $content = $request->getContent();
-        if (true === is_resource($content)) {
-            // Ca ne devrait pas arriver, mais juste au cas ou Symfony décide de nous retourner
-            // une resource sur un truc un peu gros par exemple
-            $this->app->abort(500, "\$request->getContent() is not a string, WTF ????");
-            return; // inutile, mais pas pour scrutinizer
-        }
-
-        $data = json_decode($content, true);
-        if (false === is_array($data)) {
+        $params = json_decode($request->getContent(), true);
+        if (false === is_array($params)) {
             $this->app->abort(400, "Invalid JSON data");
         }
 
         // OUF, on peut enfin faire ce qu'on a à faire...
-        $request->request->replace($data);
+        $request->request->replace($params);
     }
 
     /**
