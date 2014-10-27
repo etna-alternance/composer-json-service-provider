@@ -45,24 +45,24 @@ class JSONServiceProvider implements ServiceProviderInterface
      * Le message de l'exception n'est retourné que si ce n'est pas une erreur 500
      * ou que le `debug` est activé
      *
-     * @param \Exception $e
+     * @param \Exception $exception
      * @param integer $code HTTP status code (100 <= $code <= 50x)
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function errorHandler(\Exception $e, $code)
+    public function errorHandler(\Exception $exception, $code)
     {
-        if (false === is_a($e, "Symfony\Component\HttpKernel\Exception\HttpException")) {
-            $code = $e->getCode();
+        if (false === is_a($exception, "Symfony\Component\HttpKernel\Exception\HttpException")) {
+            $code = $exception->getCode();
         }
 
-        if (true === is_a($e, "InvalidArgumentException")) {
+        if (true === is_a($exception, "InvalidArgumentException")) {
             $code = 400;
         }
 
         if ($code >= 100 && $code < 500) {
-            return $this->app->json($e->getMessage(), $code);
+            return $this->app->json($exception->getMessage(), $code);
         }
 
-        return $this->app->json($this->app["debug"] === true ? $e->getMessage() : null, 500);
+        return $this->app->json($this->app["debug"] === true ? $exception->getMessage() : null, 500);
     }
 }
