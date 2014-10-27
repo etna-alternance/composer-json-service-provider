@@ -83,10 +83,10 @@ class JSONServiceProvider implements ServiceProviderInterface
     private function sanitizeExceptionCode($code, \Exception $exception = null)
     {
         switch (true) {
-            case true === is_object($exception) && false === is_a($exception, "Symfony\Component\HttpKernel\Exception\HttpException"):
+            case null !== $exception && !$exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException:
                 return $this->sanitizeExceptionCode($exception->getCode());
 
-            case true === is_object($exception) && true === is_a($exception, "InvalidArgumentException"):
+            case $exception instanceof \InvalidArgumentException:
                 return 400;
 
             case 100 <= $code && $code < 600:
