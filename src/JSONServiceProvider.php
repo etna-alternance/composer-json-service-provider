@@ -22,7 +22,7 @@ class JSONServiceProvider implements ServiceProviderInterface
             function (Request $request) {
                 if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
                     $data = json_decode($request->getContent(), true);
-                    $request->request->replace(is_array($data) ? $data : array());
+                    $request->request->replace(is_array($data) === true ? $data : array());
                 }
             }
         );
@@ -32,16 +32,16 @@ class JSONServiceProvider implements ServiceProviderInterface
          */
         $app->error(
             function (\Exception $e, $code) use ($app) {
-                if (!is_a($e, "Symfony\Component\HttpKernel\Exception\HttpException")) {
+                if (false === is_a($e, "Symfony\Component\HttpKernel\Exception\HttpException")) {
                     $code = $e->getCode();
                 }
-                if (is_a($e, "InvalidArgumentException")) {
+                if (true === is_a($e, "InvalidArgumentException")) {
                     $code = 400;
                 }
                 if ($code >= 100 && $code < 500) {
                     return $app->json($e->getMessage(), $code);
                 }
-                return $app->json($app["debug"] == true ? $e->getMessage() : null, 500);
+                return $app->json($app["debug"] === true ? $e->getMessage() : null, 500);
             }
         );
     }
