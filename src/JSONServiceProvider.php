@@ -26,20 +26,35 @@ class JSONServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * Gere le JSON dans le body d'une requete
+     * Gère le JSON dans le body d'une requête
      *
      * @param Request $request
      */
     public function jsonInputHandler(Request $request)
     {
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
-            $data = json_decode($request->getContent(), true);
-            $request->request->replace(is_array($data) === true ? $data : array());
+        // on ne s'interese qu'aux requêtes de type "application/json"
+        if (0 !== strpos($request->headers->get('Content-Type'), 'application/json')) {
+            return;
         }
+
+        $content = $request->getContent();
+        if (false === is_string($content)) {
+            // Ca ne devrait pas arriver, mais juste au cas ou Symfony décide de nous retourner
+            // une resource sur un truc un peu gros par exemple
+            $this->app->abort(500, "\$request->getContent() is not a string, WTF ????");
+        }
+
+        $data = json_decode($content, true);
+        if (false === is_array($data)) {
+            $this->app->abort(400, "Invalid JSON data");
+        }
+
+        // OUF, on peut enfin faire ce qu'on a à faire...
+        $request->request->replace($data);
     }
 
     /**
-     * Gere les erreurs et retourne un truc standardisé
+     * Gère les erreurs et retourne un truc standardisé
      *
      * Le code d'erreur HTTP est gardé, mais pas forcément le message, et sera encapsuler dans une réponse JSON
      * Le message de l'exception n'est retourné que si ce n'est pas une erreur 500
