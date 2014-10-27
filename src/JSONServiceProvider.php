@@ -47,7 +47,7 @@ class JSONServiceProvider implements ServiceProviderInterface
      *
      * @param \Exception $e
      * @param integer $code HTTP status code (100 <= $code <= 50x)
-     * @return string
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function errorHandler(\Exception $e, $code)
     {
