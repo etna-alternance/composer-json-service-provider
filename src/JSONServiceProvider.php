@@ -37,7 +37,22 @@ class JSONServiceProvider implements ServiceProviderInterface
             return;
         }
 
-        $params = json_decode($request->getContent(), true);
+        // Cas particulier pour les "cons" qui nous envoient le content-type,
+        // mais pas du tout de content...
+        // du coup, on force le request à un tableau vide, histoire d'écraser tout ce
+        // que les autres trucs auraient pu mettre.
+        $body = $request->getContent();
+        if ("" === $body) {
+            $request->request->replace([]);
+            return;
+        }
+
+        $params = json_decode($body, true);
+
+        // On n'utilise pas json_last_error() parce qu'il nous faut obligatoirement
+        // un tableau pour le $request->request->replace() un peu plus bas...
+        // Ce n'est donc pas vraiment une erreur de json_decode que l'on cherche
+        // à vérifier.
         if (false === is_array($params)) {
             $this->app->abort(400, "Invalid JSON data");
         }
