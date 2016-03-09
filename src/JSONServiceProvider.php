@@ -3,7 +3,8 @@
 namespace ETNA\Silex\Provider\JSON;
 
 use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\ServiceProviderInterface;
+use Pimple\Container;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -13,11 +14,7 @@ class JSONServiceProvider implements ServiceProviderInterface
 {
     private $app;
 
-    public function boot(Application $app)
-    {
-    }
-
-    public function register(Application $app)
+    public function register(Container $app)
     {
         $this->app = $app;
 
