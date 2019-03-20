@@ -5,7 +5,7 @@ env:
   - COVERALLS_SERVICE_NAME=drone.io
 script:
   - composer global require phpdocumentor/phpdocumentor --no-interaction --prefer-dist --no-progress
-  - composer install --dev --no-interaction --prefer-dist --no-progress
+  - composer install --dev --no-interaction --prefer-dist --no-progress --no-scripts
   - composer phing
   - composer coveralls
 notify:
