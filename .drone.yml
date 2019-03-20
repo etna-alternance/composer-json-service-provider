@@ -1,4 +1,6 @@
 image: etna/drone-php7:php71
+cache:
+  - /root/.composer
 env:
   - APPLICATION_ENV=test
   - COVERALLS_REPO_TOKEN=$$COVERALLS_TOKEN
