@@ -13,7 +13,7 @@ Modifier `composer.json` :
 {
     // ...
     "require": {
-        "etna/json-service-provider": "~0.1"
+        "etna/json-service-provider": "^3.0"
     },
     "repositories": [
        {

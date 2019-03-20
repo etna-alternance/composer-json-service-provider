@@ -1,0 +1,7 @@
+services:
+    json.json_request_service:
+        autoconfigure: true
+        autowire: true
+        class: 'ETNA\Json\Services\JsonRequestService'
+
+    ETNA\Json\Services\JsonRequestService: '@json.json_request_service'

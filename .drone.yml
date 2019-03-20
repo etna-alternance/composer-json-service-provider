@@ -1,0 +1,20 @@
+image: etna/drone-php7:php71
+cache:
+  - /root/.composer
+env:
+  - APPLICATION_ENV=test
+  - COVERALLS_REPO_TOKEN=$$COVERALLS_TOKEN
+  - COVERALLS_SERVICE_NAME=drone.io
+script:
+  - composer global require phpdocumentor/phpdocumentor --no-interaction --prefer-dist --no-progress
+  - composer install --dev --no-interaction --prefer-dist --no-progress --no-scripts
+  - composer phing
+  - composer coveralls
+notify:
+  slack:
+    webhook_url: $$SLACK_WEBHOOK_URL
+    username: drone
+    channel: $$SLACK_CHANNEL
+    on_started: true
+    on_failure: true
+    on_success: true
