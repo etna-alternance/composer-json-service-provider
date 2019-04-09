@@ -14,6 +14,10 @@ default:
         - '%paths.base%/features/suites'
       contexts:
         - ETNA\FeatureContext\ApiContext
+        - ETNA\FeatureContext\ExceptionContainerContext
+        - ETNA\FeatureContext\SymfonyTestKernelContext:
+            bundles:
+              - '\ETNA\Json\JsonBundle'
   extensions:
     Behat\Symfony2Extension:
       kernel:
@@ -36,6 +40,10 @@ ci:
                 - tmp
                 - Tests
         - ETNA\FeatureContext\ApiContext
+        - ETNA\FeatureContext\ExceptionContainerContext
+        - ETNA\FeatureContext\SymfonyTestKernelContext:
+            bundles:
+              - '\ETNA\Json\JsonBundle'
   extensions:
     Behat\Symfony2Extension:
       kernel:

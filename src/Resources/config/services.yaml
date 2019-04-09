@@ -3,5 +3,6 @@ services:
         autoconfigure: true
         autowire: true
         class: 'ETNA\Json\Services\JsonRequestService'
+        public: true
 
     ETNA\Json\Services\JsonRequestService: '@json.json_request_service'
